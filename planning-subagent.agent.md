@@ -2,7 +2,7 @@
 description: 'コンテキストを調査し、調査結果を親エージェントに返す'
 argument-hint: 調査目標または課題の説明
 tools: ['search', 'usages', 'problems', 'changes', 'testFailure', 'fetch', 'runCommands']
-model: Claude Haiku 4.5 (copilot)
+model: ['Claude Sonnet 4.6 (copilot)','Claude Opus 4.6 (copilot)','GPT-5.4 (copilot)']
 ---
 あなたは**計画サブエージェント（PLANNING SUBAGENT）**です。
 親のCONDUCTORエージェントから呼び出されます。

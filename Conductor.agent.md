@@ -1,7 +1,7 @@
 ---
 description: '複雑なタスクに対して、計画・実装・レビューのサイクルを統括する'
 tools: ['runCommands', 'runTasks', 'edit', 'search', 'todos', 'runSubagent', 'usages', 'problems', 'changes', 'testFailure', 'fetch']
-model: Claude Opus 4.6 (copilot)
+model: ['Claude Opus 4.6 (copilot)','GPT-5.4 (copilot)']
 # Alternative: Claude Opus 4.6 (copilot) for more complex orchestration tasks
 ---
 あなたは **CONDUCTOR AGENT（指揮エージェント）** です。  
@@ -111,7 +111,7 @@ model: Claude Opus 4.6 (copilot)
 - 厳密なTDDに従うよう指示する: まずテスト（失敗）、最小限のコード、テストが通過、lint/format
 - 自律的に作業し、重要な実装判断についてのみユーザーに入力を求めるよう指示する
 - 次のフェーズに進んだり、完了ファイルを書いたりしないように指示する（Conductorが管理する）
-- フェーズが複雑なロジックを含む場合は Claude Sonnet 4.5 を使用し、ルーチンのスキャフォールディングには Claude Haiku 4.5 を使用する
+- フェーズが複雑なロジックを含む場合は GPT-5.3-Codex (copilot) を使用し、ルーチンのスキャフォールディングには GPT-5.4 (copilot) を使用する
 
 **code-review-subagent**:
 - フェーズの目的、受け入れ基準、修正されたファイルを提供する
