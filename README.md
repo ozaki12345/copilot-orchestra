@@ -1,429 +1,429 @@
 # GitHub Copilot Orchestra
 
-> **A multi-agent orchestration system for structured, test-driven software development with AI assistance**
+> **AIアシスタンスによる構造化されたテスト駆動ソフトウェア開発のためのマルチエージェントオーケストレーションシステム**
 
-## What is GitHub Copilot Orchestra?
+## GitHub Copilot Orchestra とは？
 
-The "GitHub Copilot Orchestra" pattern transformed how I build with AI agents. Instead of juggling context and constantly switching modes, the Orchestra pattern provides a structured workflow that coordinates specialized AI subagents through a complete AI development cycle for adding a feature or making a change: planning → implementation → review → commit.
+「GitHub Copilot Orchestra」パターンは、AIエージェントによる開発方法を変革します。コンテキストの管理やモードの切り替えに追われる代わりに、Orchestraパターンは、機能追加や変更を行う際に、計画 → 実装 → レビュー → コミットという完全なAI開発サイクルを通じて、専門化されたAIサブエージェントを統括する構造化されたワークフローを提供します。
 
-The system solves a critical challenge in AI-assisted development: maintaining code quality and test coverage while moving quickly. By enforcing Test-Driven Development (TDD) conventions and implementing quality gates at every phase, you get the speed of AI coding combined with best practices in software engineering.
+このシステムは、AI支援開発における重要な課題を解決します。それは、素早く動きながらもコード品質とテストカバレッジを維持することです。テスト駆動開発（TDD）の規約を強制し、各フェーズで品質ゲートを実装することで、AIコーディングのスピードとソフトウェアエンジニアリングのベストプラクティスを両立できます。
 
-## Key Features
+## 主な機能
 
-- **🎭 Multi-Agent Workflow** - Conductor agent orchestrates specialized Planning, Implementation, and Code Review subagents, each optimized for their specific role.
-- **✅ TDD Enforcement** - Strict Test Driven Development: writing failing tests, seeing them fail, writing minimal code to pass, and verifying success before proceeding.
-- **🔍 Quality Gates** - Automated code review after each phase ensures standards are met before moving forward.
-- **📋 Documentation Trail** - Comprehensive plan files and phase completion records create an audit trail for reviewing all work completed.
-- **⏸️ Mandatory Pause Points** - Built-in stops for plan approval and phase commits keep you in control of the development process.
-- **🔄 Iterative Cycles** - Each implementation phase follows the complete cycle: implement → review → commit before proceeding to the next phase.
-- **💎 Keeps Context Concise** - The majority of the work is done in dedicated subagents, each with its own context window and dedciated prompt. This helps reduce hallucinations as the context window fills up.
+- **🎭 マルチエージェントワークフロー** - 指揮エージェントが、計画・実装・コードレビューの各専門サブエージェントをオーケストレーション。それぞれの役割に最適化されています。
+- **✅ TDD の強制** - 厳格なテスト駆動開発: 失敗するテストを書き、失敗を確認し、通過させるための最小限のコードを書き、成功を確認してから次へ進みます。
+- **🔍 品質ゲート** - 各フェーズ後の自動コードレビューにより、次に進む前に基準が満たされていることを保証します。
+- **📋 ドキュメントの証跡** - 包括的な計画ファイルとフェーズ完了記録が、完了した全作業を確認するための監査証跡を作成します。
+- **⏸️ 必須停止ポイント** - 計画承認やフェーズコミットのためのビルトインの停止点により、開発プロセスの制御を維持できます。
+- **🔄 反復サイクル** - 各実装フェーズは、次のフェーズに進む前に、実装 → レビュー → コミットの完全なサイクルに従います。
+- **💎 コンテキストの簡潔さを維持** - 作業の大部分は、それぞれ独自のコンテキストウィンドウと専用プロンプトを持つ専門サブエージェントで実行されます。これにより、コンテキストウィンドウが埋まる際のハルシネーションの軽減に役立ちます。
 
-## Architecture Overview
+## アーキテクチャ概要
 
-The Orchestra system consists of four specialized agents:
+Orchestraシステムは4つの専門エージェントで構成されています:
 
-### Conductor Agent
-- `Conductor.agent.md` - Main orchestration agent that manages the complete development cycle.
-    - Coordinates Planning, Implementation, and Code Review subagents.
-    - Generates the plan to be followed.
-    - Handles user interactions and mandatory pause points.
-    - Enforces the Planning → Implementation → Review → Commit cycle.
-    - Uses Claude Sonnet 4.5 by default.
+### 指揮エージェント（Conductor Agent）
+- `Conductor.agent.md` - 完全な開発サイクルを管理するメインオーケストレーションエージェント。
+    - 計画・実装・コードレビューのサブエージェントを統括。
+    - 実行される計画を生成。
+    - ユーザーインタラクションと必須停止ポイントを処理。
+    - 計画 → 実装 → レビュー → コミットのサイクルを強制。
+    - デフォルトでは Claude Sonnet 4.5 を使用。
 
-### Planning Subagent
-- **`planning-subagent.agent.md`** - Research and context gathering specialist.
-    - Analyzes codebase structure and patterns.
-    - Identifies relevant files and functions.
-    - Returns structured findings to inform plan creation.
-    - Uses Claude Sonnet 4.5 by default.
+### 計画サブエージェント（Planning Subagent）
+- **`planning-subagent.agent.md`** - 調査とコンテキスト収集の専門家。
+    - コードベースの構造とパターンを分析。
+    - 関連するファイルと関数を特定。
+    - 計画作成に役立つ構造化された調査結果を返す。
+    - デフォルトでは Claude Sonnet 4.5 を使用。
 
-### Implementation Subagent
-- **`implement-subagent.agent.md`** - Implementation specialist following TDD conventions.
-    - Executes individual phases of the development plan.
-    - Writes failing tests first, then minimal code to pass.
-    - Works autonomously within phase boundaries.
-    - Uses Claude Haiku 4.5 by default for premium request efficiency.
+### 実装サブエージェント（Implementation Subagent）
+- **`implement-subagent.agent.md`** - TDD規約に従う実装の専門家。
+    - 開発計画の個々のフェーズを実行。
+    - まず失敗するテストを書き、次に通過させるための最小限のコードを書く。
+    - フェーズの境界内で自律的に作業。
+    - 信頼性の高い実装品質のため、デフォルトでは Claude Sonnet 4.5 を使用。
+    - 代替: ルーチンのスキャフォールディングタスクには Claude Haiku 4.5 でより高速/低コスト。
 
-### Code Review Subagent
-- **`code-review-subagent.agent.md`** - Quality assurance specialist.
-    - Reviews uncommitted code changes using git to identify new code.
-    - Validates test coverage and code quality.
-    - Returns review results back to Conductor (`APPROVED/NEEDS_REVISION/FAILED`).
-    - Uses Claude Sonnet 4.5 by default.
+### コードレビューサブエージェント（Code Review Subagent）
+- **`code-review-subagent.agent.md`** - 品質保証の専門家。
+    - gitを使用してコミットされていないコード変更をレビューし、新しいコードを特定。
+    - テストカバレッジとコード品質を検証。
+    - レビュー結果を指揮エージェントに返す（`APPROVED/NEEDS_REVISION/FAILED`）。
+    - デフォルトでは Claude Sonnet 4.5 を使用。
 
-## Prerequisites
+## 前提条件
 
-Before using the GitHub Copilot Orchestra, ensure you have:
+GitHub Copilot Orchestraを使用する前に、以下を確認してください:
 
-- **VS Code Insiders** - Required for the custom chat modes feature that enables subagents and handing tasks off to them.
-    - Download from: https://code.visualstudio.com/insiders/
+- **VS Code Insiders** - サブエージェントへのタスク委譲を可能にするカスタムチャットモード機能に必要。
+    - ダウンロード: https://code.visualstudio.com/insiders/
 
-- **GitHub Copilot Subscription** - Active subscription required for AI-powered agents
-    - Individual or Business plan
-    - GitHub Copilot Chat extension installed and enabled
+- **GitHub Copilot サブスクリプション** - AI搭載エージェントに必要なアクティブなサブスクリプション
+    - Individual または Business プラン
+    - GitHub Copilot Chat 拡張機能がインストールされ有効化されていること
 
-- **Git** - Version control is integral to the workflow
-    - Used for commit workflow at end of each phase
-    - Recommended: Basic familiarity with git commands
+- **Git** - バージョン管理はワークフローに不可欠
+    - 各フェーズ終了時のコミットワークフローに使用
+    - 推奨: gitコマンドの基本的な知識
 
-## Installation
+## インストール
 
-### Initial Setup
+### 初期セットアップ
 
-1. **Clone or Download the Repository**
+1. **リポジトリのクローンまたはダウンロード**
    ```bash
    git clone https://github.com/ShepAlderson/copilot-orchestra.git
    cd copilot-orchestra
    ```
    
-   Alternatively, download the repository as a ZIP file and extract it to your desired location or just copy the contents of the agent files from the browser.
+   または、リポジトリをZIPファイルとしてダウンロードして任意の場所に展開するか、ブラウザからエージェントファイルの内容をコピーしてください。
 
-2. **Verify Prerequisites**
-    - Ensure the latest VSCode Insiders is installed and running.
-    - Confirm the GitHub Copilot Chat extension is active (check the chat icon in the sidebar).
-    - Verify your workspace is a git repository (run `git status` to confirm)
-        - If not, you can use `git init` if you have git installed.
+2. **前提条件の確認**
+    - 最新の VSCode Insiders がインストールされ実行されていることを確認。
+    - GitHub Copilot Chat 拡張機能がアクティブであることを確認（サイドバーのチャットアイコンを確認）。
+    - ワークスペースが git リポジトリであることを確認（`git status` を実行して確認）
+        - そうでない場合、gitがインストールされていれば `git init` を使用できます。
 
-### Setup Custom Agents
+### カスタムエージェントのセットアップ
 
-The GitHub Copilot Orchestra uses custom chat modes in VSCode Insiders to enable the multi-agent workflow. Each `.agent.md` file defines a specialized AI agent.
+GitHub Copilot Orchestraは、VSCode Insidersのカスタムチャットモードを使用してマルチエージェントワークフローを実現します。各 `.agent.md` ファイルが専門化されたAIエージェントを定義します。
 
-1. **Open VSCode Insiders** in your workspace directory
+1. **VSCode Insiders を開く** - ワークスペースディレクトリで
     ```bash
     cd /path/to/your/project
     code-insiders .
     ```
 
-2. **Locate Agent Files** - The repository includes four `.agent.md` files in the root directory:
+2. **エージェントファイルの確認** - リポジトリのルートディレクトリに4つの `.agent.md` ファイルがあります:
     - `Conductor.agent.md`
     - `planning-subagent.agent.md`
     - `implement-subagent.agent.md`
     - `code-review-subagent.agent.md`
 
-3. **Install the agent files**
-    - **Copy the `.agent.md` files to your project's root directory**
-        - Great for sharing among a team.
-        - Scoped to the individual project.
-    - **Install the custom agents in your User Data for use in all workspaces**
-        - Allows the custom agents to work in any project you open with VSCode Insiders.
-        - Copy files to the User Data location:
-            - Something like `/Users/username/Library/Application Support/Code - Insiders/User/prompts` on Mac, or the equivalent on your system
-        - **OR:**
-        - Manual Setup Process:
-            - Click the chat mode dropdown at the bottom of the copilot chat.
-            - Click "Configure Custom Agents".
-            - Click "Create new custom agent" in the command dropdown at the top of VSCode.
-            - Select "User Data"
-            - Type the name of the file you're setting up. i.e.:
+3. **エージェントファイルのインストール**
+    - **`.agent.md` ファイルをプロジェクトのルートディレクトリにコピー**
+        - チーム間での共有に最適。
+        - 個別のプロジェクトにスコープ。
+    - **すべてのワークスペースで使用するために、ユーザーデータにカスタムエージェントをインストール**
+        - VSCode Insidersで開くすべてのプロジェクトでカスタムエージェントが動作。
+        - ファイルをユーザーデータの場所にコピー:
+            - Mac の場合: `/Users/username/Library/Application Support/Code - Insiders/User/prompts` または同等のパス
+        - **または:**
+        - 手動セットアップ手順:
+            - Copilot チャットの下部にあるチャットモードドロップダウンをクリック。
+            - 「Configure Custom Agents」をクリック。
+            - VSCode上部のコマンドドロップダウンで「Create new custom agent」をクリック。
+            - 「User Data」を選択。
+            - セットアップするファイル名を入力:
                 - Conductor
                 - planning-subagent
                 - implement-subagent
                 - code-review-subagent
-            - Copy and paste the context of the agent file from this repo into the file that opens in VSCode.
+            - このリポジトリのエージェントファイルの内容を、VSCodeで開いたファイルにコピー＆ペースト。
 
-4. Create the Plans Directory
-    - The Conductor agent generates documentation files to track progress. Create the `plans/` directory (or the Conductor will make it when it writes out the first plan file):
+4. plans ディレクトリの作成
+    - 指揮エージェントは進捗を追跡するためのドキュメントファイルを生成します。`plans/` ディレクトリを作成してください（または最初の計画ファイル書き込み時に指揮エージェントが自動作成します）:
 
         ```bash
         mkdir plans
         ```
-    - This directory will store:
-        - Core task plan documents (`<task-name>-plan.md`)
-        - Phase completion summaries (`<task-name>-phase-<N>-complete.md`)
-        - Final task completion summaries (`<task-name>-complete.md`)
+    - このディレクトリには以下が保存されます:
+        - コアタスク計画ドキュメント（`<task-name>-plan.md`）
+        - フェーズ完了サマリー（`<task-name>-phase-<N>-complete.md`）
+        - 最終タスク完了サマリー（`<task-name>-complete.md`）
 
-**No Additional Configuration Required** - The agents will appear in the GitHub Copilot Chat interface automatically.
+**追加の設定は不要です** - エージェントは GitHub Copilot Chat インターフェースに自動的に表示されます。
 
-## Using the Conductor Agent
+## 指揮エージェントの使用方法
 
-Once setup is complete, you can start using the Conductor agent:
+セットアップが完了したら、指揮エージェントを使い始められます:
 
-**Via Chat Mode Dropdown**:
-- Open GitHub Copilot Chat
-- Click the agent dropdown at the bottom of the chat panel
-- Select "Conductor" from the list of available modes
+**チャットモードドロップダウンから:**
+- GitHub Copilot Chat を開く
+- チャットパネルの下部にあるエージェントドロップダウンをクリック
+- 利用可能なモードのリストから「Conductor」を選択
 
-## How It Works
+## 動作の仕組み
 
-The Conductor agent follows a strict four-stage cycle for every development task:
+指揮エージェントは、すべての開発タスクに対して厳格な4段階サイクルに従います:
 
-### 1. Planning Phase
-- **User Request** - You describe what you want to build or change.
-- **Delegates Research** - `Conductor` invokes the `planning-subagent` to gather comprehensive context about your codebase.
-- **Plan Creation** - `Conductor` drafts a multi-phase plan (typically 3-10 phases) with specific objectives, files to modify, and tests to write.
-- **Plan Approval** - `Conductor` stops, allowing you review and approve the plan before any implementation begins.
-- **Plan Documentation** - Approved plan is saved to `plans/<task-name>-plan.md`.
+### 1. 計画フェーズ
+- **ユーザーリクエスト** - 構築または変更したい内容を説明します。
+- **調査の委譲** - `Conductor` が `planning-subagent` を呼び出し、コードベースに関する包括的なコンテキストを収集。
+- **計画の作成** - `Conductor` が具体的な目標、変更するファイル、書くべきテストを含むマルチフェーズ計画（通常3〜10フェーズ）を作成。
+- **計画の承認** - `Conductor` が停止し、実装開始前に計画をレビューして承認できます。
+- **計画の文書化** - 承認された計画は `plans/<task-name>-plan.md` に保存。
 
-### 2. Implementation Phase (repeated per plan phase)
-- **Delegates Implementation** - `Conductor` invokes the `implement-subagent` with the specific phase objective and requirements.
-- **TDD Execution** - `implement-subagent` follows strict Test-Driven Development:
-    - Writes failing tests first.
-    - Run tests to confirm they fail.
-    - Writes minimal code to make the tests pass.
-    - Run tests to verify they pass.
-    - Apply linting and formatting.
-- **Phase Summary** - `implement-subagent` reports completion back to the `Conductor`.
+### 2. 実装フェーズ（計画フェーズごとに繰り返し）
+- **実装の委譲** - `Conductor` が `implement-subagent` を、特定のフェーズ目標と要件とともに呼び出す。
+- **TDD の実行** - `implement-subagent` は厳格なテスト駆動開発に従う:
+    - まず失敗するテストを書く。
+    - テストを実行して失敗を確認。
+    - テストを通過させるための最小限のコードを書く。
+    - テストを実行して通過を確認。
+    - リンティングとフォーマットを適用。
+- **フェーズサマリー** - `implement-subagent` が完了を `Conductor` に報告。
 
-### 3. Review Phase (repeated per plan phase)
-- **Quality Check** - `Conductor` invokes the `code-review-subagent` to validate the implementation.
-- **Review Analysis** - `code-review-subagent` examines:
-    - Test coverage and correctness.
-    - Code quality and best practices.
-    - Adherence to phase objectives.
-- **Status Decision**:
-    - Returns to `Conductor` with:
-        - `APPROVED` - Proceed to commit step.
-        - `NEEDS_REVISION` - Return to implementation with specific feedback.
-        - `FAILED` - Stop and consult user for guidance.
+### 3. レビューフェーズ（計画フェーズごとに繰り返し）
+- **品質チェック** - `Conductor` が `code-review-subagent` を呼び出して実装を検証。
+- **レビュー分析** - `code-review-subagent` が以下を検査:
+    - テストカバレッジと正確性。
+    - コード品質とベストプラクティス。
+    - フェーズ目標への準拠。
+- **ステータス判定**:
+    - `Conductor` に以下のいずれかで返す:
+        - `APPROVED` - コミットステップへ進む。
+        - `NEEDS_REVISION` - 具体的なフィードバックとともに実装に戻る。
+        - `FAILED` - 停止してユーザーにガイダンスを求める。
 
-### 4. Commit Phase (repeated per plan phase)
-- **Phase Summary** - `Conductor` presents what was accomplished, to the user.
-- **Documentation** - Phase completion file is saved to `plans/<task-name>-phase-<N>-complete.md`.
-- **Commit Message** - `Conductor` generates a properly formatted git commit message.
-- **MANDATORY STOP** - User makes the git commit and confirm readiness to continue.
+### 4. コミットフェーズ（計画フェーズごとに繰り返し）
+- **フェーズサマリー** - `Conductor` が達成内容をユーザーに提示。
+- **ドキュメント** - フェーズ完了ファイルが `plans/<task-name>-phase-<N>-complete.md` に保存。
+- **コミットメッセージ** - `Conductor` が適切にフォーマットされた git コミットメッセージを生成。
+- **必須停止** - ユーザーが git コミットを行い、続行の準備ができたことを確認。
 
-**The Implement -> Review -> Commit cycle repeats** for each phase until the entire plan is complete, then the `Conductor` generates a final plan completion report.
+**実装 → レビュー → コミットのサイクルが繰り返されます** 計画全体が完了するまで各フェーズで繰り返し、その後 `Conductor` が最終的な計画完了レポートを生成します。
 
-### Agent Interaction Flow
+### エージェント間のインタラクションフロー
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Conductor
-    participant Planning
-    participant Implement
-    participant Review
+    participant User as ユーザー
+    participant Conductor as 指揮エージェント
+    participant Planning as 計画サブエージェント
+    participant Implement as 実装サブエージェント
+    participant Review as レビューサブエージェント
 
-    User->>Conductor: Request feature/change
-    Conductor->>Planning: Gather context
-    Planning-->>Conductor: Return findings
-    Conductor->>User: Present plan
-    User-->>Conductor: Approve plan
+    User->>Conductor: 機能/変更をリクエスト
+    Conductor->>Planning: コンテキスト収集
+    Planning-->>Conductor: 調査結果を返す
+    Conductor->>User: 計画を提示
+    User-->>Conductor: 計画を承認
     
-    loop For each phase
-        Conductor->>Implement: Execute phase (TDD)
-        Implement-->>Conductor: Report completion
-        Conductor->>Review: Review implementation
-        Review-->>Conductor: Return status
+    loop 各フェーズで繰り返し
+        Conductor->>Implement: フェーズの実行（TDD）
+        Implement-->>Conductor: 完了を報告
+        Conductor->>Review: 実装をレビュー
+        Review-->>Conductor: ステータスを返す
         
-        alt Approved
-            Conductor->>User: Present summary & commit message
-            User-->>Conductor: Commit & continue
-        else Needs Revision
-            Conductor->>Implement: Revise with feedback
-        else Failed
-            Conductor->>User: Request guidance
+        alt 承認
+            Conductor->>User: サマリーとコミットメッセージを提示
+            User-->>Conductor: コミット＆続行
+        else 修正が必要
+            Conductor->>Implement: フィードバックとともに修正
+        else 失敗
+            Conductor->>User: ガイダンスを求める
         end
     end
     
-    Conductor->>User: Plan complete
+    Conductor->>User: 計画完了
 ```
 
-## Usage Example
+## 使用例
 
-Here's a realistic scenario demonstrating the complete workflow:
+完全なワークフローを示す現実的なシナリオです:
 
-### Scenario: Adding User Authentication
+### シナリオ: ユーザー認証の追加
 
-**Initial Request:**
+**初回リクエスト:**
 ```
-I need to add JWT-based user authentication to my Express API. 
-Users should be able to register, login, and access protected routes.
+Express APIにJWTベースのユーザー認証を追加したい。
+ユーザーは登録、ログイン、保護されたルートへのアクセスができるようにしたい。
 ```
 
-**1. Planning Phase**
-- `Conductor` delegates to `planning-subagent` to analyze your Express codebase.
-- `planning-subagent` identifies existing patterns, middleware structure, and testing setup.
-- `Conductor` creates a 5-phase plan:
-    1. User model and database schema.
-    2. Registration endpoint with validation.
-    3. Login endpoint with JWT generation.
-    4. Authentication middleware.
-    5. Integration and end-to-end tests.
+**1. 計画フェーズ**
+- `Conductor` が `planning-subagent` に委譲して Express コードベースを分析。
+- `planning-subagent` が既存のパターン、ミドルウェア構造、テストセットアップを特定。
+- `Conductor` が5フェーズの計画を作成:
+    1. ユーザーモデルとデータベーススキーマ。
+    2. バリデーション付き登録エンドポイント。
+    3. JWT生成付きログインエンドポイント。
+    4. 認証ミドルウェア。
+    5. 統合テストとエンドツーエンドテスト。
 
-**2. You review and approve the plan**
-- The `Conductor` comes back to the user with the draft of the plan. At the bottom of the draft of the plan it may have "Open Questions". Provide answers like:
+**2. 計画のレビューと承認**
+- `Conductor` がユーザーに計画のドラフトを提示。ドラフトの末尾に「未確定事項」がある場合があります。以下のように回答してください:
     ```
-    Answers to open questions
+    未確定事項への回答
 
-    1. Yes, use bcrypt for encrpyting passwords.
+    1. はい、パスワード暗号化にはbcryptを使用してください。
     2. ...
     ```
 
-**3. Implementation -> Review -> Commit Cycle - Phase 1**
-- `Conductor` invokes `implement-subagent` for "User model and database schema".
+**3. 実装 → レビュー → コミットサイクル - フェーズ1**
+- `Conductor` が「ユーザーモデルとデータベーススキーマ」のために `implement-subagent` を呼び出す。
 - `implement-subagent`:
-    - Writes failing tests for User model (validation, password hashing, etc.).
-    - Runs tests to see them fail.
-    - Implements User model with minimal code.
-    - Runs tests to verify they pass.
-    - Applies linting/formatting.
-- `Conductor` invokes `code-review-subagent`.
-- `code-review-agent` returns `APPROVED`.
-- `Conductor` presents summary and commit message to user:
+    - ユーザーモデルの失敗するテストを作成（バリデーション、パスワードハッシュなど）。
+    - テストを実行して失敗を確認。
+    - 最小限のコードでユーザーモデルを実装。
+    - テストを実行して通過を確認。
+    - リンティング/フォーマットを適用。
+- `Conductor` が `code-review-subagent` を呼び出す。
+- `code-review-agent` が `APPROVED` を返す。
+- `Conductor` がサマリーとコミットメッセージをユーザーに提示:
     ```
-    feat: Add User model with password hashing
+    feat: パスワードハッシュ付きユーザーモデルを追加
     
-    - Create User schema with email and password fields
-    - Implement bcrypt password hashing on save
-    - Add email validation and uniqueness constraint
-    - Write comprehensive User model tests
+    - email と password フィールドを持つ User スキーマを作成
+    - 保存時の bcrypt パスワードハッシュを実装
+    - email バリデーションとユニーク制約を追加
+    - 包括的なユーザーモデルテストを作成
     ```
-- **You make the commit and tell `Conductor` to continue with "Proceed to next phase" in the chat.**
+- **コミットを行い、チャットで「次のフェーズに進んでください」と指揮エージェントに伝える。**
 
-**4. Remaining Phases**
-The cycle repeats for each remaining phase:
-- Phase 2: Registration endpoint.
-- Phase 3: Login endpoint.
-- Phase 4: Auth middleware.
-- Phase 5: Integration tests.
+**4. 残りのフェーズ**
+残りの各フェーズでサイクルが繰り返されます:
+- フェーズ2: 登録エンドポイント。
+- フェーズ3: ログインエンドポイント。
+- フェーズ4: 認証ミドルウェア。
+- フェーズ5: 統合テスト。
 
-Each phase follows: **Implementation → Review → Commit** cycle.
+各フェーズは **実装 → レビュー → コミット** サイクルに従います。
 
-**5. Completion**
-- All phases complete.
-- `Conductor` generates `plans/user-authentication-complete.md` with a full summary of what was accomplished.
-- Your feature is fully tested, reviewed, and committed in logical increments.
+**5. 完了**
+- 全フェーズが完了。
+- `Conductor` が `plans/user-authentication-complete.md` を生成し、達成内容の完全なサマリーを記載。
+- 機能は完全にテスト、レビュー、論理的な単位でコミットされます。
 
-## Generated Artifacts
+## 生成される成果物
 
-The Orchestra system creates documentation files to track progress and provide an audit trail. You may want to add your `plans` directory to your `.gitignore` if you don't want to commit them, or you can commit them as a historical record. If you do this, maybe move the plans that have been completed to `plans/archived`, just to keep things tidy
+Orchestraシステムは進捗を追跡し監査証跡を提供するためのドキュメントファイルを作成します。`plans` ディレクトリをコミットしたくない場合は `.gitignore` に追加するか、履歴記録としてコミットすることもできます。コミットする場合は、完了した計画を `plans/archived` に移動すると整理しやすくなります。
 
-### Plan File: `plans/<task-name>-plan.md`
-Created after the user approves the plan. It contains:
-- Task overview and objectives.
-- Complete phase breakdown with steps.
-- Suggestions of files and functions to create or modify.
-- Tests to write.
-- Open questions and decisions for the User to answer.
-- Useful in case the User or the `Conductor` gets interrupted. You can always refer back to this and have the `Conductor` pick up where it left off.
+### 計画ファイル: `plans/<task-name>-plan.md`
+ユーザーが計画を承認した後に作成されます。以下を含みます:
+- タスクの概要と目標。
+- ステップを含む完全なフェーズの内訳。
+- 作成または変更するファイルと関数の提案。
+- 書くべきテスト。
+- ユーザーが回答する未確定事項と決定事項。
+- ユーザーまたは `Conductor` が中断された場合に便利です。いつでもこれを参照して、`Conductor` に中断した箇所から再開させることができます。
 
-**Example:** `plans/user-authentication-plan.md`
+**例:** `plans/user-authentication-plan.md`
 
-### Phase Completion: `plans/<task-name>-phase-<N>-complete.md`
-Created after each phase commit, contains:
-- Phase objective and summary.
-- Files created/changed.
-- Functions created/changed.
-- Tests created/changed.
-- Review status.
-- Git commit message used.
-- If you need to pick up the implementation cycle in the middle of a plan, due to interruption, you can tell the conductor to review the completed phase documents for context on where to start implementing again.
+### フェーズ完了ファイル: `plans/<task-name>-phase-<N>-complete.md`
+各フェーズのコミット後に作成されます。以下を含みます:
+- フェーズの目標とサマリー。
+- 作成/変更されたファイル。
+- 作成/変更された関数。
+- 作成/変更されたテスト。
+- レビューステータス。
+- 使用された git コミットメッセージ。
+- 中断によって計画の途中から実装サイクルを再開する必要がある場合、完了したフェーズドキュメントを確認して再開箇所のコンテキストを把握するよう指揮エージェントに指示できます。
 
-**Example:** `plans/user-authentication-phase-1-complete.md`
+**例:** `plans/user-authentication-phase-1-complete.md`
 
-### Final Completion: `plans/<task-name>-complete.md`
-Created when all phases are done, contains:
-- Overall summary of the work completed.
-- All phases completed (checklist).
-- Complete list of files modified.
-- Key functions/classes added.
-- Test coverage summary.
-- Recommendations for next steps.
+### 最終完了ファイル: `plans/<task-name>-complete.md`
+全フェーズが完了した時に作成されます。以下を含みます:
+- 完了した作業の全体サマリー。
+- 完了した全フェーズ（チェックリスト）。
+- 変更されたファイルの完全なリスト。
+- 追加された主要な関数/クラス。
+- テストカバレッジのサマリー。
+- 次のステップの推奨事項。
 
-**Example:** `plans/user-authentication-complete.md`
+**例:** `plans/user-authentication-complete.md`
 
-**Benefits (if committed with project):**
-- **Audit Trail** - Full history of what was built and why.
-- **Knowledge Transfer** - New team members can understand implementation decisions.
-- **Project Documentation** - Natural documentation of feature development.
-- **Review Process** - Easy to review what changed in each phase.
+**メリット（プロジェクトとともにコミットした場合）:**
+- **監査証跡** - 何が構築され、なぜ構築されたかの完全な履歴。
+- **ナレッジトランスファー** - 新しいチームメンバーが実装の決定を理解できる。
+- **プロジェクトドキュメント** - 機能開発の自然なドキュメント。
+- **レビュープロセス** - 各フェーズで何が変更されたかを簡単にレビュー。
 
-## Tips and Best Practices
+## ヒントとベストプラクティス
 
-### Working with the Conductor
+### 指揮エージェントとの作業
 
-- **Be Specific in Requests** - Provide context about your tech stack, existing patterns, and constraints.
-    - Good: "Add JWT auth to my Express API using the existing PostgreSQL database. You can use the dev database connection string in the `.env-dev` file."
-    - Less ideal: "Add authentication."
+- **リクエストは具体的に** - 技術スタック、既存のパターン、制約についてのコンテキストを提供してください。
+    - 良い例: 「既存のPostgreSQLデータベースを使用して Express API にJWT認証を追加してください。`.env-dev` ファイルの開発用データベース接続文字列を使用できます。」
+    - 改善の余地がある例: 「認証を追加して。」
 
-- **Review Plans Carefully** - The planning phase is your chance to guide the implementation.
-    - Check that phases are appropriately scoped.
-    - Verify test requirements align with your standards.
-    - Ask questions about anything unclear.
+- **計画を慎重にレビュー** - 計画フェーズは実装をガイドするチャンスです。
+    - フェーズのスコープが適切かチェック。
+    - テスト要件が自分の基準に合っているか確認。
+    - 不明な点があれば質問。
 
-- **Commit Frequently** - Don't skip the commit step between phases.
-    - Each phase is designed to be independently committable.
-    - Smaller commits are easier to review and revert if needed.
-    - Creates a clear history of feature development.
-    - The `code-review-agent` looks for uncommitted code as a basis for what to review.
+- **頻繁にコミット** - フェーズ間のコミットステップをスキップしないでください。
+    - 各フェーズは個別にコミット可能に設計されています。
+    - 小さなコミットはレビューしやすく、必要に応じてリバートも容易。
+    - 機能開発の明確な履歴を作成。
+    - `code-review-agent` はレビュー対象として未コミットのコードを探します。
 
-### Maximizing Quality
+### 品質の最大化
 
-- **Trust the TDD Process** - Testing first seems slow but catches issues early and provides clear guide rails for implementation via AI agent, even when those tests are written by the AI agent.
-    - Failing tests confirm you're testing the right behavior.
-    - Minimal code keeps implementations focused.
-    - Passing tests give confidence to proceed.
+- **TDDプロセスを信頼する** - テストファーストは遅く感じるかもしれませんが、問題を早期に発見し、AIエージェントによる実装のための明確なガイドレールを提供します（テスト自体がAIエージェントによって書かれた場合でも）。
+    - 失敗するテストは、正しい動作をテストしていることを確認します。
+    - 最小限のコードは実装を焦点に保ちます。
+    - 通過するテストは次に進む自信を与えます。
 
-- **Pay Attention to Reviews** - The `code-review-subagent` catches important issues
-    - If status is `NEEDS_REVISION`, the feedback is handed back to the `Conductor` to start a new `implement-subagent` to fix the issue.
-    - Use `FAILED` status as a signal to reassess approach. The `Conductor` will come back to the user and ask for input on what to do next.
+- **レビューに注意を払う** - `code-review-subagent` は重要な問題を検出します。
+    - ステータスが `NEEDS_REVISION` の場合、フィードバックは `Conductor` に戻され、問題を修正するための新しい `implement-subagent` が開始されます。
+    - `FAILED` ステータスはアプローチの再評価のシグナルとして使用してください。`Conductor` がユーザーに戻り、次に何をすべきか確認します。
 
-- **Leverage the Documentation** - Phase completion files are valuable artifacts.
-    - Review them before making commits.
-    - Use them for PR descriptions and discussions.
+- **ドキュメントを活用する** - フェーズ完了ファイルは価値のある成果物です。
+    - コミット前にレビュー。
+    - PRの説明やディスカッションに使用。
 
-### Optimizing Performance
+### パフォーマンスの最適化
 
-- **Keep Phases Focused** - Smaller phases complete faster and with fewer iterations.
-    - If a phase seems too large, ask Conductor to break it down.
-    - Target 1-3 files modified per phase when possible.
+- **フェーズを焦点化する** - 小さなフェーズはより速く完了し、反復回数も少なくなります。
+    - フェーズが大きすぎると感じたら、指揮エージェントに分割を依頼。
+    - 可能であれば、フェーズあたりの変更ファイルを1〜3に抑える。
 
-- **Provide Good Context** - Help the `planning-subagent` find relevant code
-    - Mention specific files or directories if you know them and attach them as explicit context in the AI chat.
-    - Reference existing patterns to follow.
-    - Call out any constraints or requirements upfront.
+- **良いコンテキストを提供する** - `planning-subagent` が関連コードを見つけやすくする。
+    - 知っている場合は具体的なファイルやディレクトリを言及し、AIチャットで明示的なコンテキストとして添付。
+    - 従うべき既存パターンを参照。
+    - 制約や要件を事前に伝える。
 
-- **Use the Right Model** - The default agent configurations are optimized for a cost/quality balance.
-    - Planning: Claude Sonnet 4.5 (project overview and collecting data for the plan)
-    - Implementation: Claude Haiku 4.5 (efficient implementation of tests and code)
-    - Review: Claude Sonnet 4.5 (thorough analysis and code review)
-    - You can customize these in the `.agent.md` files if you'd like to use different models. Just change the model at the top of the file. (VSCode should autocomplete models available. Just delete past the `:` and type `:` again and a dropdown select should appear.)
+- **適切なモデルを使用する** - デフォルトのエージェント設定は品質/コストのバランスに最適化されています。
+    - 指揮エージェント: Claude Sonnet 4.5（オーケストレーションと計画の調整）
+    - 計画: Claude Sonnet 4.5（プロジェクト概要と計画用データの収集）
+    - 実装: Claude Sonnet 4.5（テストとコードの信頼性の高い実装）
+    - レビュー: Claude Sonnet 4.5（徹底的な分析とコードレビュー）
+    - 別のモデルを使用したい場合は `.agent.md` ファイルでカスタマイズできます。ファイル上部のモデルを変更するだけです。（VSCodeが利用可能なモデルをオートコンプリートします。`:` の後を削除して再度 `:` を入力すると、ドロップダウン選択が表示されます。）
+    - 指揮エージェントには、非常に複雑なマルチフェーズタスクのオーケストレーション時に Claude Opus 4.6 を検討してください。
+    - ルーチンのスキャフォールディング実装には、Claude Haiku 4.5 で品質を維持しながらコストを削減できます。
 
-## Extending GitHub Copilot Orchestra to fit your needs
+## ニーズに合わせた GitHub Copilot Orchestra の拡張
 
-### Customizing Agents
+### エージェントのカスタマイズ
 
-Each agent is defined in a `.agent.md` file that you can modify:
+各エージェントは変更可能な `.agent.md` ファイルで定義されています:
 
-**Adjust AI Model:**
-- Change to other models.
-- Available models in VSCode Insiders, as of the Nov. 5th, 2025:
+**AIモデルの調整:**
+- 他のモデルに変更可能。
+- VSCode Insidersで利用可能なモデル（2026年3月時点; 利用可能なモデルは変更される場合があります）:
     - `Auto (copilot)`
-    - `Claude Sonnet 4.5 (copilot)`
-    - `Claude Haiku 4.5 (copilot)`
-    - `Claude Sonnet 4 (copilot)`
-    - `Claude Sonnet 3.5 (copilot)`
-    - `GPT-5 (copilot)`
-    - `GPT-5-Codex (Preview) (copilot)`
-    - `GPT-5 mini (copilot)`
-    - `GPT-4.1 (copilot)`
-    - `GPT-4o (copilot)`
-    - `Grok Code Fast 1 (copilot)`
-    - `Gemini 2.5 Pro (copilot)`
+    - `Claude Opus 4.6 (copilot)` — プランニングや複雑なタスクのオーケストレーションに最適
+    - `Claude Sonnet 4.5 (copilot)` — バランスの取れた品質とコスト
+    - `Claude Haiku 4.5 (copilot)` — ルーチンタスク向けの高速・低コスト    
+    - `GPT-5.4 (copilot)` — 最高品質の実装とレビュー向け 推奨デフォルト
+    - `GPT-5.3-Codex (copilot)` — コード生成に特化したモデル
+    - `GPT-5.4-mini (copilot)` — 軽量モデル、低コストで高速な応答        
 
-**Modify Instructions:**
-- Edit the main section to change agent behavior, add new rules, or enforce project-specific conventions.
+**指示の変更:**
+- メインセクションを編集してエージェントの動作を変更、新しいルールを追加、またはプロジェクト固有の規約を適用できます。
 
-**Add Custom Tools:**
-- Agents have access to various tools (file operations, terminal commands, etc.). The tool availability is managed by VS Code but you can provide guidance in instructions. You can also add MCP servers, if you use any. (I recommend getting `context7` setup. It's mentioned in the subagent files, and you can add it to the `tools` in the subagent files once it's setup.)
+**カスタムツールの追加:**
+- エージェントは様々なツール（ファイル操作、ターミナルコマンドなど）にアクセスできます。ツールの利用可能性はVS Codeで管理されますが、指示の中でガイダンスを提供できます。MCPサーバーを使用している場合は追加もできます。（`context7` のセットアップをお勧めします。サブエージェントファイルで言及されており、セットアップ後にサブエージェントファイルの `tools` に追加できます。）
+- **注意:** `githubRepo` ツールは最近のVS Code Insidersアップデートで非推奨になりました。GitHub機能はMCPツール（例: GitHub MCPサーバー）を通じて利用可能です。GitHub連携が必要な場合はMCPサーバーを設定してください。
 
-### Creating New Subagents
+### 新しいサブエージェントの作成
 
-You can create specialized subagents for your workflow:
+ワークフローに合わせた専門サブエージェントを作成できます:
 
-1. **Create a new `.agent.md` file** (e.g., `database-migration-subagent.agent.md`).
-2. **Define the agent's role and instructions** using existing agents as templates.
-3. **Update Conductor** to invoke your new subagent where appropriate.
-4. **Test the integration** with a sample task.
+1. **新しい `.agent.md` ファイルを作成**（例: `database-migration-subagent.agent.md`）。
+2. **既存のエージェントをテンプレートとして使用**し、エージェントの役割と指示を定義。
+3. **指揮エージェントを更新**して、適切な箇所で新しいサブエージェントを呼び出すようにする。
+4. **サンプルタスクで統合をテスト**。
 
-**Ideas for subagents:**
-- **deployment-subagent** - Specialized in deployment configurations.
-- **security-audit-subagent** - Focused on security analysis.
-- **performance-optimization-subagent** - Optimizes code performance.
-- **documentation-subagent** - Generates comprehensive documentation.
+**サブエージェントのアイデア:**
+- **deployment-subagent** - デプロイ設定の専門家。
+- **security-audit-subagent** - セキュリティ分析に特化。
+- **performance-optimization-subagent** - コードパフォーマンスの最適化。
+- **documentation-subagent** - 包括的なドキュメントの生成。
 
-## License
+## ライセンス
 
 MIT License
 
